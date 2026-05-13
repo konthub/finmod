@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Карнелия Analytics · ПВЗ</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+:root{
+  --bg:#0f111a;
+  --sidebar:#111423;
+  --panel:#191d2b;
+  --panel-2:#202637;
+  --card:#1b2030;
+  --card-soft:#242b3d;
+  --text:#f4f6fb;
+  --muted:#8b93a7;
+  --line:rgba(255,255,255,.08);
+  --blue:#5b6cff;
+  --violet:#a855f7;
+  --pink:#ec4899;
+  --cyan:#22d3ee;
+  --green:#34d399;
+  --orange:#f59e0b;
+  --shadow:0 18px 40px rgba(0,0,0,.28);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(91,108,255,.18),transparent 30%),
+    radial-gradient(circle at 80% 10%,rgba(168,85,247,.15),transparent 32%),
+    var(--bg);
+  color:var(--text);
+}
+
+.app{
+  width:100%;
+  max-width:520px;
+  margin:0 auto;
+  min-height:100vh;
+  padding:14px 12px 96px;
+}
+
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.logo{
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  box-shadow:0 10px 26px rgba(91,108,255,.35);
+}
+
+.brand-text{
+  font-size:15px;
+  font-weight:900;
+}
+
+.brand-sub{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.search{
+  width:38px;
+  height:38px;
+  border-radius:14px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  display:grid;
+  place-items:center;
+  color:var(--muted);
+}
+
+.hero{
+  background:linear-gradient(145deg,#1d2234,#151927);
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:20px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+}
+
+.hero-top{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+
+.hero h1{
+  margin:0;
+  font-size:27px;
+  line-height:1.05;
+  letter-spacing:-.045em;
+}
+
+.hero p{
+  margin:10px 0 0;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.45;
+}
+
+.badge{
+  padding:8px 10px;
+  border-radius:999px;
+  background:rgba(91,108,255,.14);
+  color:#c9ceff;
+  font-size:11px;
+  font-weight:800;
+  white-space:nowrap;
+}
+
+.status{
+  margin-top:12px;
+  font-size:12px;
+  color:var(--cyan);
+  font-weight:800;
+}
+
+.error{color:#fb7185}
+
+.filters{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:14px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+}
+
+.filter-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+label{
+  display:block;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  color:var(--muted);
+  margin-bottom:6px;
+  font-weight:900;
+}
+
+input,select,button{
+  width:100%;
+  border:none;
+  outline:none;
+  border-radius:15px;
+  padding:12px;
+  font-size:13px;
+  background:var(--card-soft);
+  color:var(--text);
+}
+
+select option{
+  background:#191d2b;
+  color:#fff;
+}
+
+button{
+  cursor:pointer;
+  font-weight:900;
+  background:linear-gradient(135deg,var(--blue),var(--violet));
+  box-shadow:0 12px 24px rgba(91,108,255,.22);
+}
+
+button.secondary{
+  background:var(--card-soft);
+  color:#cfd5e8;
+  box-shadow:none;
+}
+
+.kpis{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.kpi{
+  background:linear-gradient(145deg,#1b2030,#151927);
+  border:1px solid var(--line);
+  border-radius:22px;
+  padding:15px;
+  box-shadow:var(--shadow);
+  position:relative;
+  overflow:hidden;
+}
+
+.kpi:after{
+  content:"";
+  position:absolute;
+  right:-28px;
+  top:-28px;
+  width:76px;
+  height:76px;
+  border-radius:50%;
+  background:rgba(91,108,255,.16);
+}
+
+.kpi:nth-child(2):after{background:rgba(168,85,247,.18)}
+.kpi:nth-child(3):after{background:rgba(34,211,238,.16)}
+.kpi:nth-child(4):after{background:rgba(236,72,153,.16)}
+.kpi:nth-child(5):after{background:rgba(52,211,153,.16)}
+
+.kpi-title{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+  margin-bottom:7px;
+}
+
+.kpi-value{
+  font-size:23px;
+  font-weight:950;
+  letter-spacing:-.04em;
+}
+
+.kpi-note{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:5px;
+}
+
+.card{
+  background:linear-gradient(145deg,#1b2030,#151927);
+  border:1px solid var(--line);
+  border-radius:24px;
+  padding:16px;
+  box-shadow:var(--shadow);
+  margin-bottom:12px;
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+.card h2{
+  margin:0;
+  font-size:17px;
+  letter-spacing:-.03em;
+}
+
+.card p{
+  margin:5px 0 0;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.4;
+}
+
+.chart{
+  height:245px;
+}
+
+.table-wrap{
+  overflow-x:auto;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:#111423;
+}
+
+table{
+  width:100%;
+  min-width:720px;
+  border-collapse:collapse;
+  font-size:12px;
+}
+
+th,td{
+  padding:11px 10px;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+  text-align:left;
+}
+
+th{
+  color:var(--muted);
+  font-size:11px;
+  background:#171b29;
+}
+
+.rank{
+  font-weight:950;
+  color:var(--cyan);
+}
+
+.bottom-actions{
+  position:fixed;
+  left:50%;
+  bottom:12px;
+  transform:translateX(-50%);
+  width:calc(100% - 24px);
+  max-width:520px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+  z-index:50;
+}
+
+@media(min-width:900px){
+  .app{
+    max-width:1180px;
+    padding:18px 18px 96px;
+  }
+
+  .layout{
+    display:grid;
+    grid-template-columns:1.2fr .8fr;
+    gap:12px;
+  }
+
+  .kpis{
+    grid-template-columns:repeat(5,1fr);
+  }
+
+  .hero h1{
+    font-size:40px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+  <header class="header">
+    <div class="brand">
+      <div class="logo">C</div>
+      <div>
+        <div class="brand-text">Разработка: Kontrollerro.ru </div>
+        <div class="brand-sub">Аналитика · Бизнес процессы · Контроль · Внедрение AI</div>
+      </div>
+    </div>
+    <div class="search">⌕</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-top">
+      <div>
+        <h1>Дашборд заказов через ПВЗ. Химчистка Карнелия</h1>
+        <p>Заказы, выручка, владельцы, клиенты, повторность и динамика по периодам.</p>
+      </div>
+      <div class="badge">CRM VIEW</div>
+    </div>
+    <div class="status" id="status">Загружаю данные…</div>
+  </section>
+
+  <section class="filters">
+    <div class="filter-grid">
+      <div>
+        <label>Дата с</label>
+        <input type="date" id="dateFrom">
+      </div>
+      <div>
+        <label>Дата по</label>
+        <input type="date" id="dateTo">
+      </div>
+      <div>
+        <label>ПВЗ</label>
+        <select id="adrFilter">
+          <option value="">Все ПВЗ</option>
+        </select>
+      </div>
+      <div>
+        <label>Владелец</label>
+        <select id="ipFilter">
+          <option value="">Все владельцы</option>
+        </select>
+      </div>
+      <button id="refreshBtn" type="button">Обновить</button>
+      <button id="resetBtn" class="secondary" type="button">Сбросить</button>
+    </div>
+  </section>
+
+  <section class="kpis">
+    <div class="kpi">
+      <div class="kpi-title">Заказы</div>
+      <div class="kpi-value" id="kpiOrders">0</div>
+      <div class="kpi-note">за выбранный период</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-title">Выручка</div>
+      <div class="kpi-value" id="kpiRevenue">0 ₽</div>
+      <div class="kpi-note">сумма заказов</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-title">Средний чек</div>
+      <div class="kpi-value" id="kpiAvg">0 ₽</div>
+      <div class="kpi-note">выручка / заказ</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-title">Активные ПВЗ</div>
+      <div class="kpi-value" id="kpiAdr">0</div>
+      <div class="kpi-note">точки с заказами</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi-title">Клиенты</div>
+      <div class="kpi-value" id="kpiClients">0</div>
+      <div class="kpi-note">по телефонам</div>
+    </div>
+  </section>
+
+  <section class="layout">
+    <div>
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Динамика заказов</h2>
+            <p>Количество заказов по месяцам.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="monthChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Динамика выручки</h2>
+            <p>Денежный поток по месяцам.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="monthMoneyChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>ТОП ПВЗ по заказам</h2>
+            <p>Какие пункты дают основной поток.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="adrOrdersChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>ТОП ПВЗ по выручке</h2>
+            <p>Какие пункты дают основной денежный вклад.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="adrMoneyChart"></canvas></div>
+      </section>
+    </div>
+
+    <div>
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Доля владельцев</h2>
+            <p>Распределение заказов по владельцам.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="ipChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Новые / повторные</h2>
+            <p>CRM-срез клиентов по телефонам.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="clientChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>Дни недели</h2>
+            <p>Когда чаще всего появляются заказы.</p>
+          </div>
+        </div>
+        <div class="chart"><canvas id="weekChart"></canvas></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <h2>CRM-сводка</h2>
+            <p>ПВЗ, владелец, заказы, доля, выручка и средний чек.</p>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>№</th>
+                <th>ПВЗ</th>
+                <th>Владелец</th>
+                <th>Заказы</th>
+                <th>Доля</th>
+                <th>Выручка</th>
+                <th>Средний чек</th>
+              </tr>
+            </thead>
+            <tbody id="summaryTable"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </section>
+
+</main>
+
+<div class="bottom-actions">
+  <button id="csvBtn" type="button">Скачать CSV</button>
+  <button id="excelBtn" type="button">Скачать Excel</button>
+</div>
+
+<script>
+const SHEET_ID = "1Nt-nOItMB-69Mw134r_uRB96_L188pWCy4skUxD16m0";
+const SHEET_GID = "656299522";
+
+let rawRows = [];
+let filteredRows = [];
+let charts = {};
+
+document.addEventListener("DOMContentLoaded", function(){
+  document.getElementById("refreshBtn").addEventListener("click", applyFilters);
+  document.getElementById("resetBtn").addEventListener("click", resetFilters);
+  document.getElementById("csvBtn").addEventListener("click", exportCSV);
+  document.getElementById("excelBtn").addEventListener("click", exportExcel);
+
+  loadSheet();
+});
+
+window.handleGviz = function(response){
+  try{
+    if(!response || !response.table){
+      setStatus("Google Sheets вернул пустой ответ.", true);
+      return;
+    }
+
+    const table = response.table;
+    let headers = table.cols.map(c => String(c.label || "").trim().toLowerCase());
+
+    const getCol = function(names, fallback){
+      for(let i = 0; i < headers.length; i++){
+        const h = headers[i];
+        if(names.includes(h)) return i;
+      }
+      for(let i = 0; i < headers.length; i++){
+        const h = headers[i];
+        if(names.some(n => h.includes(n))) return i;
+      }
+      return fallback;
+    };
+
+    const dateCol = getCol(["date","дата","дата заказа"], 0);
+    const adrCol = getCol(["adr","address","адрес","пвз","точка"], 1);
+    const clientCol = getCol(["client","клиент","фио"], 2);
+    const itemCol = getCol(["item","вещь","вещи","изделие"], 3);
+    const telCol = getCol(["tel","phone","телефон"], 4);
+    const sumCol = getCol(["sum","сумма","стоимость","выручка"], 5);
+    const ipCol = getCol(["ip","владелец","ип","партнер","партнёр"], 6);
+
+    rawRows = table.rows.map(function(r){
+      const c = r.c || [];
+
+      const get = function(i){
+        if(i < 0 || !c[i]) return "";
+        return c[i].f || c[i].v || "";
+      };
+
+      return {
+        date: parseDate(get(dateCol)),
+        adr: String(get(adrCol) || "Без ПВЗ").trim(),
+        client: String(get(clientCol) || "").trim(),
+        item: String(get(itemCol) || "").trim(),
+        tel: normalizePhone(get(telCol)),
+        sum: parseMoney(get(sumCol)),
+        ip: String(get(ipCol) || "Без владельца").trim()
+      };
+    }).filter(function(r){
+      return r.date && r.adr;
+    });
+
+    if(!rawRows.length){
+      setStatus("Данные загружены, но строки не распознаны. Проверь столбцы date, adr, sum.", true);
+      return;
+    }
+
+    setStatus("Данные загружены: " + rawRows.length + " строк");
+    initFilters();
+    applyFilters();
+
+  }catch(e){
+    console.error(e);
+    setStatus("Ошибка обработки данных. Открой консоль браузера для деталей.", true);
+  }
+};
+
+function loadSheet(){
+  setStatus("Загружаю данные…");
+
+  const old = document.getElementById("gvizLoader");
+  if(old) old.remove();
+
+  const tqx = encodeURIComponent("out:json;responseHandler:handleGviz");
+  const script = document.createElement("script");
+
+  script.id = "gvizLoader";
+  script.src = "https://docs.google.com/spreadsheets/d/" + SHEET_ID + "/gviz/tq?gid=" + SHEET_GID + "&headers=1&tqx=" + tqx;
+
+  script.onerror = function(){
+    setStatus("Не удалось загрузить Google Sheets. Проверь доступ: файл должен быть открыт по ссылке.", true);
+  };
+
+  document.body.appendChild(script);
+}
+
+function setStatus(text,error){
+  const el = document.getElementById("status");
+  if(!el) return;
+  el.innerHTML = error ? '<span class="error">' + text + '</span>' : text;
+}
+
+function parseDate(value){
+  if(!value) return null;
+
+  if(value instanceof Date && !isNaN(value.getTime())) return value;
+
+  const str = String(value).trim();
+
+  const gviz = str.match(/Date\((\d+),(\d+),(\d+),?(\d+)?,?(\d+)?,?(\d+)?/);
+  if(gviz){
+    return new Date(
+      Number(gviz[1]),
+      Number(gviz[2]),
+      Number(gviz[3]),
+      Number(gviz[4] || 0),
+      Number(gviz[5] || 0),
+      Number(gviz[6] || 0)
+    );
+  }
+
+  const ru = str.match(/^(\d{1,2})[.\-/](\d{1,2})[.\-/](\d{2,4})(?:\s+(\d{1,2}):(\d{2})(?::(\d{2}))?)?/);
+  if(ru){
+    let year = Number(ru[3]);
+    if(year < 100) year += 2000;
+
+    return new Date(
+      year,
+      Number(ru[2]) - 1,
+      Number(ru[1]),
+      Number(ru[4] || 0),
+      Number(ru[5] || 0),
+      Number(ru[6] || 0)
+    );
+  }
+
+  const iso = new Date(str);
+  return isNaN(iso.getTime()) ? null : iso;
+}
+
+function parseMoney(value){
+  if(typeof value === "number") return value;
+
+  return Number(
+    String(value || "")
+      .replace(/\s/g,"")
+      .replace(",",".")
+      .replace(/[^\d.-]/g,"")
+  ) || 0;
+}
+
+function normalizePhone(value){
+  return String(value || "").replace(/[^\d+]/g,"").trim();
+}
+
+function inputDate(d){
+  const copy = new Date(d);
+  copy.setMinutes(copy.getMinutes() - copy.getTimezoneOffset());
+  return copy.toISOString().slice(0,10);
+}
+
+function money(v){
+  return new Intl.NumberFormat("ru-RU",{maximumFractionDigits:0}).format(v) + " ₽";
+}
+
+function num(v){
+  return new Intl.NumberFormat("ru-RU").format(v);
+}
+
+function shortLabel(v){
+  v = String(v || "");
+  return v.length > 18 ? v.slice(0,18) + "…" : v;
+}
+
+function monthKey(d){
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2,"0");
+}
+
+function initFilters(){
+  fillSelect("adrFilter",[...new Set(rawRows.map(r => r.adr))].sort());
+  fillSelect("ipFilter",[...new Set(rawRows.map(r => r.ip))].sort());
+
+  const dates = rawRows.map(r => r.date).sort((a,b) => a - b);
+
+  if(dates.length){
+    document.getElementById("dateFrom").value = inputDate(dates[0]);
+    document.getElementById("dateTo").value = inputDate(dates[dates.length - 1]);
+  }
+}
+
+function fillSelect(id,values){
+  const select = document.getElementById(id);
+  const label = id === "adrFilter" ? "Все ПВЗ" : "Все владельцы";
+
+  select.innerHTML = '<option value="">' + label + '</option>';
+
+  values.forEach(function(v){
+    const option = document.createElement("option");
+    option.value = v;
+    option.textContent = v;
+    select.appendChild(option);
+  });
+}
+
+function applyFilters(){
+  if(!rawRows.length){
+    setStatus("Данные ещё не загружены", true);
+    return;
+  }
+
+  const fromVal = document.getElementById("dateFrom").value;
+  const toVal = document.getElementById("dateTo").value;
+  const adr = document.getElementById("adrFilter").value;
+  const ip = document.getElementById("ipFilter").value;
+
+  const from = fromVal ? new Date(fromVal + "T00:00:00") : null;
+  const to = toVal ? new Date(toVal + "T23:59:59") : null;
+
+  filteredRows = rawRows.filter(function(r){
+    if(from && r.date < from) return false;
+    if(to && r.date > to) return false;
+    if(adr && r.adr !== adr) return false;
+    if(ip && r.ip !== ip) return false;
+    return true;
+  });
+
+  render();
+  setStatus("Показано строк: " + filteredRows.length + " из " + rawRows.length);
+}
+
+function resetFilters(){
+  document.getElementById("adrFilter").value = "";
+  document.getElementById("ipFilter").value = "";
+
+  const dates = rawRows.map(r => r.date).sort((a,b) => a - b);
+
+  if(dates.length){
+    document.getElementById("dateFrom").value = inputDate(dates[0]);
+    document.getElementById("dateTo").value = inputDate(dates[dates.length - 1]);
+  }
+
+  applyFilters();
+}
+
+function group(rows,keyFn){
+  const map = {};
+
+  rows.forEach(function(r){
+    const key = keyFn(r) || "Без значения";
+
+    if(!map[key]){
+      map[key] = {
+        key:key,
+        orders:0,
+        revenue:0,
+        adr:r.adr,
+        ip:r.ip
+      };
+    }
+
+    map[key].orders += 1;
+    map[key].revenue += r.sum;
+  });
+
+  return Object.values(map);
+}
+
+function render(){
+  renderKpi();
+  safe(renderMonthChart);
+  safe(renderMonthMoneyChart);
+  safe(renderAdrOrdersChart);
+  safe(renderAdrMoneyChart);
+  safe(renderIpChart);
+  safe(renderClientChart);
+  safe(renderWeekChart);
+  renderTable();
+}
+
+function safe(fn){
+  try{
+    fn();
+  }catch(e){
+    console.warn("Render skipped",e);
+  }
+}
+
+function renderKpi(){
+  const orders = filteredRows.length;
+  const revenue = filteredRows.reduce((s,r) => s + r.sum,0);
+  const avg = orders ? revenue / orders : 0;
+  const adrCount = new Set(filteredRows.map(r => r.adr)).size;
+  const clients = new Set(filteredRows.map(r => r.tel).filter(Boolean)).size;
+
+  document.getElementById("kpiOrders").innerText = num(orders);
+  document.getElementById("kpiRevenue").innerText = money(revenue);
+  document.getElementById("kpiAvg").innerText = money(avg);
+  document.getElementById("kpiAdr").innerText = num(adrCount);
+  document.getElementById("kpiClients").innerText = num(clients);
+}
+
+function drawChart(id,type,labels,datasets){
+  const canvas = document.getElementById(id);
+  if(!canvas || typeof Chart === "undefined") return;
+
+  if(charts[id]) charts[id].destroy();
+
+  charts[id] = new Chart(canvas,{
+    type:type,
+    data:{
+      labels:labels,
+      datasets:datasets
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{
+        legend:{
+          display:type === "doughnut" || datasets.length > 1,
+          position:"bottom",
+          labels:{
+            color:"#8b93a7",
+            boxWidth:10,
+            font:{size:11}
+          }
+        }
+      },
+      scales:type === "doughnut" ? {} : {
+        x:{
+          grid:{display:false},
+          ticks:{color:"#8b93a7",font:{size:10}}
+        },
+        y:{
+          beginAtZero:true,
+          grid:{color:"rgba(255,255,255,.06)"},
+          ticks:{color:"#8b93a7",font:{size:10}}
+        }
+      }
+    }
+  });
+}
+
+function renderMonthChart(){
+  const data = group(filteredRows,r => monthKey(r.date)).sort((a,b) => a.key.localeCompare(b.key));
+
+  drawChart("monthChart","line",data.map(x => x.key),[{
+    label:"Заказы",
+    data:data.map(x => x.orders),
+    borderColor:"#5b6cff",
+    backgroundColor:"rgba(91,108,255,.18)",
+    pointBackgroundColor:"#22d3ee",
+    tension:.35,
+    fill:true
+  }]);
+}
+
+function renderMonthMoneyChart(){
+  const data = group(filteredRows,r => monthKey(r.date)).sort((a,b) => a.key.localeCompare(b.key));
+
+  drawChart("monthMoneyChart","bar",data.map(x => x.key),[{
+    label:"Выручка",
+    data:data.map(x => Math.round(x.revenue)),
+    backgroundColor:"#a855f7",
+    borderRadius:10
+  }]);
+}
+
+function renderAdrOrdersChart(){
+  const data = group(filteredRows,r => r.adr).sort((a,b) => b.orders - a.orders).slice(0,10);
+
+  drawChart("adrOrdersChart","bar",data.map(x => shortLabel(x.key)),[{
+    label:"Заказы",
+    data:data.map(x => x.orders),
+    backgroundColor:"#5b6cff",
+    borderRadius:10
+  }]);
+}
+
+function renderAdrMoneyChart(){
+  const data = group(filteredRows,r => r.adr).sort((a,b) => b.revenue - a.revenue).slice(0,10);
+
+  drawChart("adrMoneyChart","bar",data.map(x => shortLabel(x.key)),[{
+    label:"Выручка",
+    data:data.map(x => Math.round(x.revenue)),
+    backgroundColor:"#22d3ee",
+    borderRadius:10
+  }]);
+}
+
+function renderIpChart(){
+  const data = group(filteredRows,r => r.ip).sort((a,b) => b.orders - a.orders).slice(0,8);
+
+  drawChart("ipChart","doughnut",data.map(x => shortLabel(x.key)),[{
+    label:"Заказы",
+    data:data.map(x => x.orders),
+    backgroundColor:["#5b6cff","#a855f7","#ec4899","#22d3ee","#34d399","#f59e0b","#818cf8","#06b6d4"]
+  }]);
+}
+
+function renderClientChart(){
+  const phones = {};
+
+  filteredRows.forEach(function(r){
+    if(!r.tel) return;
+    phones[r.tel] = (phones[r.tel] || 0) + 1;
+  });
+
+  let first = 0;
+  let repeat = 0;
+
+  Object.values(phones).forEach(function(count){
+    if(count === 1) first++;
+    if(count > 1) repeat++;
+  });
+
+  drawChart("clientChart","doughnut",["Новые","Повторные"],[{
+    label:"Клиенты",
+    data:[first,repeat],
+    backgroundColor:["#22d3ee","#ec4899"]
+  }]);
+}
+
+function renderWeekChart(){
+  const counts = [0,0,0,0,0,0,0];
+
+  filteredRows.forEach(function(r){
+    counts[r.date.getDay()] += 1;
+  });
+
+  drawChart("weekChart","bar",["Пн","Вт","Ср","Чт","Пт","Сб","Вс"],[{
+    label:"Заказы",
+    data:[counts[1],counts[2],counts[3],counts[4],counts[5],counts[6],counts[0]],
+    backgroundColor:"#34d399",
+    borderRadius:10
+  }]);
+}
+
+function renderTable(){
+  const total = filteredRows.length || 1;
+
+  const data = group(filteredRows,r => r.adr)
+    .map(function(x){
+      return {
+        ...x,
+        avg:x.orders ? x.revenue / x.orders : 0,
+        share:x.orders / total * 100
+      };
+    })
+    .sort((a,b) => b.orders - a.orders);
+
+  const tbody = document.getElementById("summaryTable");
+  tbody.innerHTML = "";
+
+  data.forEach(function(r,i){
+    tbody.innerHTML += `
+      <tr>
+        <td class="rank">${i + 1}</td>
+        <td>${escapeHtml(r.key)}</td>
+        <td>${escapeHtml(r.ip)}</td>
+        <td>${num(r.orders)}</td>
+        <td>${r.share.toFixed(1)}%</td>
+        <td>${money(r.revenue)}</td>
+        <td>${money(r.avg)}</td>
+      </tr>
+    `;
+  });
+}
+
+function exportRows(){
+  return filteredRows.map(function(r){
+    return {
+      "Дата":r.date.toLocaleString("ru-RU"),
+      "ПВЗ":r.adr,
+      "Клиент":r.client,
+      "Вещи":r.item,
+      "Телефон":r.tel,
+      "Сумма":r.sum,
+      "Владелец":r.ip
+    };
+  });
+}
+
+function exportCSV(){
+  const rows = exportRows();
+
+  if(!rows.length){
+    alert("Нет данных для экспорта");
+    return;
+  }
+
+  const headers = Object.keys(rows[0]);
+
+  const csv = [
+    headers.join(";"),
+    ...rows.map(function(row){
+      return headers.map(function(h){
+        return '"' + String(row[h] ?? "").replaceAll('"','""') + '"';
+      }).join(";");
+    })
+  ].join("\n");
+
+  downloadFile(new Blob(["\uFEFF" + csv],{type:"text/csv;charset=utf-8"}),"pvz-dashboard-report.csv");
+}
+
+function exportExcel(){
+  const rows = exportRows();
+
+  if(!rows.length){
+    alert("Нет данных для экспорта");
+    return;
+  }
+
+  const headers = Object.keys(rows[0]);
+
+  const html = `
+    <html>
+      <head><meta charset="UTF-8"></head>
+      <body>
+        <table border="1">
+          <thead>
+            <tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr>
+          </thead>
+          <tbody>
+            ${rows.map(row => `
+              <tr>${headers.map(h => `<td>${escapeHtml(row[h])}</td>`).join("")}</tr>
+            `).join("")}
+          </tbody>
+        </table>
+      </body>
+    </html>
+  `;
+
+  downloadFile(new Blob(["\uFEFF" + html],{type:"application/vnd.ms-excel;charset=utf-8"}),"pvz-dashboard-report.xls");
+}
+
+function downloadFile(blob,name){
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+
+  a.href = url;
+  a.download = name;
+  a.style.display = "none";
+
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(function(){
+    URL.revokeObjectURL(url);
+  },500);
+}
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;");
+}
+</script>
+
+</body>
+</html>
