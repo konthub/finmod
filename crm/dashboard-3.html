@@ -614,7 +614,6 @@ const SHEET_ID = "1Nt-nOItMB-69Mw134r_uRB96_L188pWCy4skUxD16m0";
 const SHEET_GID = "1416879116";
 
 const RETAIL_POINTS = [
-  "Вадим",
   "Оранжевый",
   "Триумф",
   "Лотос",
@@ -1247,7 +1246,7 @@ function exportCSV(){
     })
   ].join("\n");
 
-  downloadFile(new Blob(["\uFEFF" + csv],{type:"text/csv;charset=utf-8"}),"cornelia-retail-crm-report.csv");
+  downloadFile(new Blob(["\uFEFF" + csv],{type:"text/csv;charset=utf-8"}),"cornelia-retail-main-crm-report.csv");
 }
 
 function exportExcel(){
@@ -1278,7 +1277,7 @@ function exportExcel(){
     </html>
   `;
 
-  downloadFile(new Blob(["\uFEFF" + html],{type:"application/vnd.ms-excel;charset=utf-8"}),"cornelia-retail-crm-report.xls");
+  downloadFile(new Blob(["\uFEFF" + html],{type:"application/vnd.ms-excel;charset=utf-8"}),"cornelia-retail-main-crm-report.xls");
 }
 
 function downloadFile(blob,name){
