@@ -591,6 +591,7 @@ window.handleGviz = function(response){
     const telCol = getCol(["tel","phone","телефон"], 4);
     const sumCol = getCol(["sum","сумма","стоимость","выручка"], 5);
     const ipCol = getCol(["ip","владелец","ип","партнер","партнёр"], 6);
+    const staffCol = getCol(["staff","телефон сотрудника","сотрудник","staff phone"], -1);
 
     rawRows = table.rows.map(function(r){
       const c = r.c || [];
@@ -607,7 +608,8 @@ window.handleGviz = function(response){
         item: String(get(itemCol) || "").trim(),
         tel: normalizePhone(get(telCol)),
         sum: parseMoney(get(sumCol)),
-        ip: String(get(ipCol) || "Без владельца").trim()
+        ip: String(get(ipCol) || "Без владельца").trim(),
+        staff: normalizePhone(get(staffCol))
       };
     }).filter(function(r){
       return r.date && r.adr;
@@ -1028,7 +1030,8 @@ function exportRows(){
       "Вещи":r.item,
       "Телефон":r.tel,
       "Сумма":r.sum,
-      "Владелец":r.ip
+      "Владелец":r.ip,
+      "Телефон сотрудника":r.staff
     };
   });
 }
